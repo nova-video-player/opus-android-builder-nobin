@@ -5,6 +5,15 @@ source ../../AVP/android-setup-light.sh
 LOCAL_PATH=$($READLINK -f .)
 PREBUILT_DIR=$($READLINK -f ../prebuilt/opus)
 
+# skip git clone if all prebuilt libs already exist
+if [ -f "${PREBUILT_DIR}/lib/armeabi-v7a/libopus.so" ] && \
+   [ -f "${PREBUILT_DIR}/lib/arm64-v8a/libopus.so" ] && \
+   [ -f "${PREBUILT_DIR}/lib/x86/libopus.so" ] && \
+   [ -f "${PREBUILT_DIR}/lib/x86_64/libopus.so" ]; then
+  echo "All opus prebuilt libs already exist, skipping"
+  exit 0
+fi
+
 if [ ! -d "opus" ]
 then
   git clone https://github.com/xiph/opus.git

@@ -10,8 +10,14 @@ PREBUILT_DIR=$($READLINK -f ../prebuilt/opus)
 if [ -f "${PREBUILT_DIR}/lib/armeabi-v7a/libopus.so" ] && \
    [ -f "${PREBUILT_DIR}/lib/arm64-v8a/libopus.so" ] && \
    [ -f "${PREBUILT_DIR}/lib/x86/libopus.so" ] && \
-   [ -f "${PREBUILT_DIR}/lib/x86_64/libopus.so" ]; then
+   [ -f "${PREBUILT_DIR}/lib/x86_64/libopus.so" ] && \
+   [ -f "${PREBUILT_DIR}/include/opus.h" ]; then
   echo "All opus prebuilt libs already exist, skipping"
+  if [ -d "opus" ]; then
+    mkdir -p ${PREBUILT_DIR}/include/opus
+    cp opus/include/*.h ${PREBUILT_DIR}/include/opus/
+    cp opus/include/*.h ${PREBUILT_DIR}/include/
+  fi
   exit 0
 fi
 
@@ -24,6 +30,10 @@ then
   cat ../CMakeLists.txt.diff | patch -p 1
   cd ..
 fi
+
+mkdir -p ${PREBUILT_DIR}/include/opus
+cp opus/include/*.h ${PREBUILT_DIR}/include/opus/
+cp opus/include/*.h ${PREBUILT_DIR}/include/
 
 API_LEVEL=21
 
@@ -53,3 +63,7 @@ do
     echo "Already built for ${ABI}"
   fi
 done
+
+mkdir -p ${PREBUILT_DIR}/include/opus
+cp opus/include/*.h ${PREBUILT_DIR}/include/opus/
+cp opus/include/*.h ${PREBUILT_DIR}/include/
